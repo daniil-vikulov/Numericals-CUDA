@@ -8,7 +8,7 @@ set(CMAKE_CUDA_STANDARD 23)
 
 set(CMAKE_CUDA_ARCHITECTURES 86)
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp CUDASolver.cpp)
 
-target_link_libraries(${PROJECT_NAME} cuda cudart)
+target_link_libraries(${PROJECT_NAME} ${CUDA_LIBRARIES} cublas cusolver cuda cudart)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CUDA_INCLUDE_DIRS})
