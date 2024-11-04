@@ -13,6 +13,7 @@ set(SOURCES
     main.cpp 
     src/iterative_method.cpp 
     tests/tests.cpp
+    src/gauss.cpp
 )
 
 # Add executable
