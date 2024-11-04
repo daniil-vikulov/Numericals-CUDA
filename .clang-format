@@ -1,0 +1,30 @@
+BasedOnStyle: Google
+
+IndentWidth: 4      
+TabWidth: 4              
+UseTab: Never
+
+BreakBeforeBraces: Attach  
+AllowShortFunctionsOnASingleLine: Empty 
+SpacesInParentheses: false 
+
+Cpp11BracedListStyle: true  
+
+PointerAlignment: Left       
+
+SpaceBeforeParens: ControlStatements 
+SpacesInAngles: false              
+SpaceAfterCStyleCast: true   
+
+ColumnLimit: 100          
+PenaltyBreakBeforeFirstCallParameter: 100 
+
+AlignTrailingComments: true
+CommentPragmas: '^ IWYU pragma:'
+
+IncludeBlocks: Preserve   
+IncludeIsMainRegex: '([.]hpp|[.]h)'
+
+SortIncludes: false        
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false 
