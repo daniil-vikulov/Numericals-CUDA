@@ -5,7 +5,8 @@
 #include <algorithm>
 #include <Accelerate/Accelerate.h>
 
-void convert_to_column_major(const std::vector<std::vector<double>> &A, double *A_col_major, int N) {
+void convert_to_column_major(const std::vector<std::vector<double>> &A, double *A_col_major,
+                             int N) {
     for (int r = 0; r < N; ++r) {
         for (int c = 0; c < N; ++c) {
             A_col_major[c * N + r] = A[r][c];
@@ -13,7 +14,8 @@ void convert_to_column_major(const std::vector<std::vector<double>> &A, double *
     }
 }
 
-static int arg_max(const std::vector<std::vector<double>>& A, const std::vector<int>& row_order, int start_row, int col) {
+static int arg_max(const std::vector<std::vector<double>> &A, const std::vector<int> &row_order,
+                   int start_row, int col) {
     double max_val = std::abs(A[row_order[start_row]][col]);
     int max_row = start_row;
     for (int i = start_row + 1; i < row_order.size(); ++i) {
@@ -25,13 +27,16 @@ static int arg_max(const std::vector<std::vector<double>>& A, const std::vector<
     return max_row;
 }
 
-void gauss::solve_slae_gauss(std::vector<std::vector<double>> A, std::vector<double> b, std::vector<double>& x) {
+void gauss::solve_slae_gauss(std::vector<std::vector<double>> A, std::vector<double> b,
+                             std::vector<double> &x) {
     int n = A.size();
     x.resize(n, 0.0);
 
     std::vector<int> row_order(n), col_order(n);
-    for (int i = 0; i < n; ++i) row_order[i] = i;
-    for (int j = 0; j < n; ++j) col_order[j] = j;
+    for (int i = 0; i < n; ++i)
+        row_order[i] = i;
+    for (int j = 0; j < n; ++j)
+        col_order[j] = j;
 
     for (int row = 0; row < n; ++row) {
         int max_row = arg_max(A, row_order, row, col_order[row]);
@@ -39,7 +44,8 @@ void gauss::solve_slae_gauss(std::vector<std::vector<double>> A, std::vector<dou
 
         int max_col = row;
         for (int col = row + 1; col < n; ++col) {
-            if (std::abs(A[row_order[row]][col_order[col]]) >= std::abs(A[row_order[row]][col_order[max_col]])) {
+            if (std::abs(A[row_order[row]][col_order[col]]) >=
+                std::abs(A[row_order[row]][col_order[max_col]])) {
                 max_col = col;
             }
         }
@@ -64,7 +70,8 @@ void gauss::solve_slae_gauss(std::vector<std::vector<double>> A, std::vector<dou
     }
 }
 
-void gauss::solve_slae_lapack(std::vector<std::vector<double>> &A, std::vector<double> &b, std::vector<double> &x) {
+void gauss::solve_slae_lapack(std::vector<std::vector<double>> &A, std::vector<double> &b,
+                              std::vector<double> &x) {
     int N = A.size();
 
     double *A_col_major = new double[N * N];
