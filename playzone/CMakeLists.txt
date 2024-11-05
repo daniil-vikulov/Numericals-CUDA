@@ -8,7 +8,10 @@ set(CMAKE_CUDA_STANDARD 23)
 
 set(CMAKE_CUDA_ARCHITECTURES 86)
 
+find_package(BLAS REQUIRED)
+find_package(LAPACK REQUIRED)
+
 add_executable(${PROJECT_NAME} main.cpp)
 
-target_link_libraries(${PROJECT_NAME} cuda cudart)
+target_link_libraries(${PROJECT_NAME} cuda cudart LAPACK::LAPACK BLAS::BLAS)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CUDA_INCLUDE_DIRS})
