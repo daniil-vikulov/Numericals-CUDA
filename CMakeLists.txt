@@ -14,6 +14,9 @@ set(SOURCES
     src/iterative_method.cpp 
     tests/tests.cpp
     src/gauss.cpp
+    src/option_solver.cpp
+    src/solve.cpp
+    src/utils.cpp
 )
 
 # Add executable

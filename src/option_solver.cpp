@@ -1,6 +1,6 @@
-#include "OptionSolver.hpp"
+#include "option_solver.hpp"
 #include "utils.hpp"
-#include "GaussMethod.hpp"
+#include "gauss.hpp"
 
 double solveOptionDense(int n, int m, int p, double T, double K, double S_0, double r, double d) {
     int N = (n + 1) * (m + 1);
@@ -8,7 +8,7 @@ double solveOptionDense(int n, int m, int p, double T, double K, double S_0, dou
     std::vector<std::vector<double>> A(N, std::vector<double>(N, 0));
     std::vector<double> b(N, 0);
     std::vector<double> x(N, 0);
-    GaussMethod gm(N);
+    gauss gm(N);
 
     for (int i = 0; i <= m; i++) {
         for (int j = 0; j <= n; j++) {

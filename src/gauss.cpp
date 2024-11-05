@@ -1,5 +1,4 @@
 #include "gauss.hpp"
-#include "utils_vec.hpp"
 #include <vector>
 #include <cmath>
 #include <algorithm>
