@@ -1,11 +1,14 @@
 #include "CudaSolver.h"
 #include <iostream>
 #include <cassert>
+#include <iomanip>
 
-#define N 3
+#define N 5
+#define DATA_TYPE float
 
-float* unwrap(float A[N][N]) {
-    const auto A_flat = new float[N * N];
+template<typename T>
+T* unwrap(T A[N][N]) {
+    const auto A_flat = new T[N * N];
 
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
@@ -16,11 +19,10 @@ float* unwrap(float A[N][N]) {
     return A_flat;
 }
 
-float* multiply(const float* A, const float* x, int n) {
-    // Allocate memory for the result vector Ax
-    auto Ax = new float[n];
+template<typename T>
+T* multiply(const T* A, const T* x, const int n) {
+    auto Ax = new T[n];
 
-    // Perform the matrix-vector multiplication
     for (int i = 0; i < n; ++i) {
         Ax[i] = 0.0f;
         for (int j = 0; j < n; ++j) {
@@ -32,30 +34,37 @@ float* multiply(const float* A, const float* x, int n) {
 }
 
 int main () {
-    CudaSolver solver(N);
+    CudaSolver<DATA_TYPE, N> solver;
 
-    float A[N][N] = {{4, 1, 1}, {1, 3, 0}, {1, 0, 2}};
-    float b[N] = {10, -8, 12};
+    DATA_TYPE A[N][N] = {
+        {4.0, 1.0, 0.0, 0.0, 0.0},
+        {1.0, 3.0, 1.0, 0.0, 0.0},
+        {0.0, 1.0, 2.0, 1.0, 0.0},
+        {0.0, 0.0, 1.0, 3.0, 1.0},
+        {0.0, 0.0, 0.0, 1.0, 4.0}
+    };
 
-    float res[N] = {};
+    DATA_TYPE b[N] = {6.0, 11.0, 13.0, 19.0, 21.0};
 
-    const auto A_1D = unwrap(A);
+    DATA_TYPE res[N] = {};
 
-    assert(solver.solve(A_1D, b, 100, 1e-7, res));
+    const auto A_1D = unwrap<DATA_TYPE>(A);
+
+    if (!solver.solve(A_1D, b, 50, 1e-15, res)) {
+        std::cout << "Reached max iterations!" << std::endl;
+    }
     multiply(A_1D, res, N);
 
-    for (const auto el : res){
+    for (const auto el : res) {
+        std::cout << std::fixed << std::setprecision(10) << el << " ";
+    }
+    std::cout << std::endl;
+    for (auto el : res) {
         std::cout << el << " ";
     }
     std::cout << std::endl;
 
-    for (int i = 0; i < N; ++i) {
-        std::cout << res[i] << " ";
-    }
-    std::cout << std::endl;
-
     delete[] A_1D;
-    //delete[] product;
 
     return 0;
 }

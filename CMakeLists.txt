@@ -3,10 +3,12 @@ set(CMAKE_CUDA_ARCHITECTURES 89)
 set(CMAKE_CUDA_COMPILER /usr/local/cuda/bin/nvcc)
 project(MyCUDAProject LANGUAGES CXX CUDA)
 
+set(CMAKE_CXX_STANDARD 23)
+
 find_package(CUDAToolkit REQUIRED)
 
 include_directories(include)
 
-add_executable(MyCUDAExecutable src/main.cpp src/CudaSolver.cpp)
+add_executable(MyCUDAExecutable src/main.cpp)
 
 target_link_libraries(MyCUDAExecutable PRIVATE CUDA::cudart CUDA::cublas)
