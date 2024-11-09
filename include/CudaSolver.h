@@ -35,7 +35,7 @@ class CudaSolver {
 
 public:
     /// @brief instantiates CUDA tool, which finds a vector X in the following equation: AX = B, where A is a known
-    /// matrix nxn and B is a known vector of n elements
+    /// matrix nxn and B is a known vector of n elements. It must be real, symmetric, positive-defined!!!
     explicit CudaSolver();
 
     ~CudaSolver();
