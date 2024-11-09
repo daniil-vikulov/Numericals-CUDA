@@ -1,10 +1,9 @@
 #include "CudaSolver.h"
 #include <iostream>
-#include <cassert>
 #include <iomanip>
 
 #define N 5
-#define DATA_TYPE float
+#define DATA_TYPE double
 
 template<typename T>
 T* unwrap(T A[N][N]) {
@@ -36,6 +35,14 @@ T* multiply(const T* A, const T* x, const int n) {
 int main () {
     CudaSolver<DATA_TYPE, N> solver;
 
+    // DATA_TYPE A[N][N] = {
+    //     {4, 1, 0, 0, 0},
+    //     {1, 4, 1, 0, 0},
+    //     {0, 1, 4, 1, 0},
+    //     {0, 0, 1, 4, 1},
+    //     {0, 0, 0, 1, 4}
+    // };
+
     DATA_TYPE A[N][N] = {
         {4.0, 1.0, 0.0, 0.0, 0.0},
         {1.0, 3.0, 1.0, 0.0, 0.0},
@@ -50,7 +57,7 @@ int main () {
 
     const auto A_1D = unwrap<DATA_TYPE>(A);
 
-    if (!solver.solve(A_1D, b, 50, 1e-15, res)) {
+    if (!solver.solve(A_1D, b, 150, 1e-5, res)) {
         std::cout << "Reached max iterations!" << std::endl;
     }
     multiply(A_1D, res, N);

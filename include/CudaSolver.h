@@ -134,42 +134,62 @@ T CudaSolver<T, N>::iterate() const {
 
 template <typename T, int N>
 T CudaSolver<T, N>::calc_alpha() const {
+    // return <r_k, r_k> / <p_k, A * p_k>
+
     // tmp = A * p_k
     CB(cublasGemv(handle, CUBLAS_OP_N, n, n, &one, A, n, p_k, 1, &zero, tmp, 1));
 
+    // <p_k, A*p_k>
     T denom_result = dot(p_k, tmp);
+
     return dot(r_k, r_k) / denom_result;
 }
 
 template <typename T, int N>
 void CudaSolver<T, N>::update_x(const T alpha) const {
+    // x_k = x_k + alpha * p_k
+
     CB(cublasAxpy(handle, n, &alpha, p_k, 1, x_k, 1));
 }
 
 template <typename T, int N>
 void CudaSolver<T, N>::update_r_k_new(const T alpha) const {
+    // r_k_new = r_k - alpha * A * p_k
+
     const T neg_alpha = -alpha;
-
+    // tmp = -alpha * A * p_k
     CB(cublasGemv(handle, CUBLAS_OP_N, n, n, &neg_alpha, A, n, p_k, 1, &zero, tmp, 1));
+
+    // r_k_new = r_k
     CC(cudaMemcpy(r_k_new, r_k, n * sizeof(T), cudaMemcpyDeviceToDevice));
+
+    //r_k_new = tmp + r_k_new
     CB(cublasAxpy(handle, n, &one, tmp, 1, r_k_new, 1));
-
-
 }
 
 template <typename T, int N>
 T CudaSolver<T, N>::calc_beta() const {
-    return dot(r_k_new, r_k_new) / dot(r_k, r_k);
+    // return <r_{k+1}, r_{k+1}> / <r_k, r_k>
+
+    return 0;
+    //return dot(r_k_new, r_k_new) / dot(r_k, r_k);
 }
 
 template <typename T, int N>
 void CudaSolver<T, N>::update_p(const T beta) const {
+    // p_k = r_k_new + beta * p_k
+
+    // p_K = beta * p_k
     CB(cublasScal(handle, n, &beta, p_k, 1));
+
+    // p_k = r_k_new + p_K
     CB(cublasAxpy(handle, n, &one, r_k_new, 1, p_k, 1));
 }
 
 template <typename T, int N>
 T CudaSolver<T, N>::dot(const T *v1, const T *v2) const {
+    // return <v1, v2>
+
     T result = 0;
     CB(cublasDot(handle, n, v1, 1, v2, 1, &result));
     return result;
